@@ -153,11 +153,9 @@ func ConvertLedgerEntryExt(e xdr.LedgerEntryExt) LedgerEntryExt {
 }
 
 func ConvertLedgerEntryExtensionV1(e xdr.LedgerEntryExtensionV1) LedgerEntryExtensionV1 {
-	var sponsoringId PublicKey
+	var sponsoringId AccountId
 	if e.SponsoringId != nil {
-		sponsoringId = PublicKey{
-			Ed25519: e.SponsoringId.Ed25519.String(),
-		}
+		sponsoringId, _ = ConvertAccountId(*e.SponsoringId)
 	}
 
 	return LedgerEntryExtensionV1{
@@ -171,9 +169,7 @@ func ConvertLedgerEntryExtensionV1Ext(e xdr.LedgerEntryExtensionV1Ext) LedgerEnt
 }
 
 func ConvertLedgerKeyAccount(k xdr.LedgerKeyAccount) LedgerKeyAccount {
-	accountId := PublicKey{
-		Ed25519: ConvertEd25519(k.AccountId.Ed25519),
-	}
+	accountId, _ := ConvertAccountId(k.AccountId)
 
 	return LedgerKeyAccount{
 		AccountId: accountId,
@@ -181,9 +177,7 @@ func ConvertLedgerKeyAccount(k xdr.LedgerKeyAccount) LedgerKeyAccount {
 }
 
 func ConvertLedgerKeyTrustLine(k xdr.LedgerKeyTrustLine) (result LedgerKeyTrustLine, err error) {
-	accountID := PublicKey{
-		Ed25519: ConvertEd25519(k.AccountId.Ed25519),
-	}
+	accountID, _ := ConvertAccountId(k.AccountId)
 
 	asset, err := ConvertTrustLineAsset(k.Asset)
 	if err != nil {
@@ -197,9 +191,7 @@ func ConvertLedgerKeyTrustLine(k xdr.LedgerKeyTrustLine) (result LedgerKeyTrustL
 }
 
 func ConvertLedgerKeyOffer(k xdr.LedgerKeyOffer) (result LedgerKeyOffer, err error) {
-	seller := PublicKey{
-		Ed25519: ConvertEd25519(k.SellerId.Ed25519),
-	}
+	seller, _ := ConvertAccountId(k.SellerId)
 
 	result.SellerId = seller
 	result.OfferId = int64(k.OfferId)
@@ -210,9 +202,7 @@ func ConvertLedgerKeyOffer(k xdr.LedgerKeyOffer) (result LedgerKeyOffer, err err
 func ConvertLedgerKeyData(k xdr.LedgerKeyData) (LedgerKeyData, error) {
 	var result LedgerKeyData
 
-	accountID := PublicKey{
-		Ed25519: ConvertEd25519(k.AccountId.Ed25519),
-	}
+	accountID, _ := ConvertAccountId(k.AccountId)
 
 	result.AccountId = accountID
 	result.DataName = string(k.DataName)

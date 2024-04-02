@@ -561,9 +561,7 @@ func ConvertFeeBumpTransactionExt(f xdr.FeeBumpTransactionExt) FeeBumpTransactio
 }
 
 func ConvertDataEntry(e xdr.DataEntry) DataEntry {
-	accountId := PublicKey{
-		Ed25519: e.AccountId.Ed25519.String(),
-	}
+	accountId, _ := ConvertAccountId(e.AccountId)
 
 	return DataEntry{
 		AccountId: accountId,

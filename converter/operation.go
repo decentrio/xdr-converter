@@ -400,9 +400,7 @@ func ConvertOperationBody(bd xdr.OperationBody) (OperationBody, error) {
 	switch bd.Type {
 	case xdr.OperationTypeCreateAccount:
 		xdrDestination := bd.CreateAccountOp.Destination
-		destination := PublicKey{
-			Ed25519: xdrDestination.Ed25519.String(),
-		}
+		destination, _ := ConvertAccountId(xdrDestination)
 		createAccountOp := &CreateAccountOp{
 			Destination:     destination,
 			StartingBalance: int64(bd.CreateAccountOp.StartingBalance),
@@ -521,15 +519,13 @@ func ConvertOperationBody(bd xdr.OperationBody) (OperationBody, error) {
 	case xdr.OperationTypeSetOptions:
 		xdrSetOptions := bd.SetOptionsOp
 
-		var inflationDest PublicKey
+		var inflationDest AccountId
 		var clearFlags, setFlags, masterWeight, lowThreshold, medThreshold, highThreshold uint32
 		var homeDomain string
 		var signer Signer
 
 		if xdrSetOptions.InflationDest != nil {
-			inflationDest = PublicKey{
-				Ed25519: ConvertEd25519(xdrSetOptions.InflationDest.Ed25519),
-			}
+			inflationDest, _ = ConvertAccountId(*xdrSetOptions.InflationDest)
 		}
 
 		if xdrSetOptions.ClearFlags != nil {
@@ -600,9 +596,7 @@ func ConvertOperationBody(bd xdr.OperationBody) (OperationBody, error) {
 	case xdr.OperationTypeAllowTrust:
 		xdrAllowTrust := bd.AllowTrustOp
 
-		trustor := PublicKey{
-			Ed25519: ConvertEd25519(xdrAllowTrust.Trustor.Ed25519),
-		}
+		trustor, _ := ConvertAccountId(xdrAllowTrust.Trustor)
 
 		var assetCode []byte
 		switch xdrAllowTrust.Asset.Type {
@@ -760,9 +754,7 @@ func ConvertOperationBody(bd xdr.OperationBody) (OperationBody, error) {
 	case xdr.OperationTypeBeginSponsoringFutureReserves:
 		xdrBeginSponsoringFutureReservesOp := bd.BeginSponsoringFutureReservesOp
 
-		sponsoredId := PublicKey{
-			Ed25519: ConvertEd25519(xdrBeginSponsoringFutureReservesOp.SponsoredId.Ed25519),
-		}
+		sponsoredId, _ := ConvertAccountId(xdrBeginSponsoringFutureReservesOp.SponsoredId)
 
 		beginSponsoringFutureReservesOp := &BeginSponsoringFutureReservesOp{
 			SponsoredId: sponsoredId,
@@ -839,9 +831,7 @@ func ConvertOperationBody(bd xdr.OperationBody) (OperationBody, error) {
 	case xdr.OperationTypeSetTrustLineFlags:
 		xdrSetTrustLineFlagsOp := bd.SetTrustLineFlagsOp
 
-		trustor := PublicKey{
-			Ed25519: ConvertEd25519(xdrSetTrustLineFlagsOp.Trustor.Ed25519),
-		}
+		trustor, err := ConvertAccountId(xdrSetTrustLineFlagsOp.Trustor)
 
 		asset, err := ConvertAsset(xdrSetTrustLineFlagsOp.Asset)
 		if err != nil {

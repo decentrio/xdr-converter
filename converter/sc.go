@@ -9,9 +9,7 @@ func ConvertScAddress(a xdr.ScAddress) (ScAddress, error) {
 	var result ScAddress
 	switch a.Type {
 	case xdr.ScAddressTypeScAddressTypeAccount:
-		account := PublicKey{
-			Ed25519: ConvertEd25519(a.AccountId.Ed25519),
-		}
+		account, _ := ConvertAccountId(*a.AccountId)
 		result.AccountId = &account
 
 		return result, nil

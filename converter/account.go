@@ -5,17 +5,31 @@ import (
 	"github.com/stellar/go/xdr"
 )
 
+func ConvertAccountId(a xdr.AccountId) (AccountId, error) {
+	var result AccountId
+	accountId, err := a.GetAddress()
+	if err != nil {
+		return result, err
+	}
+
+	result.Address = accountId
+
+	return result, nil
+}
+
 func ConvertAccountEntry(e xdr.AccountEntry) (AccountEntry, error) {
 	var result AccountEntry
 
-	accountId := PublicKey{
-		Ed25519: e.AccountId.Ed25519.String(),
+	accountId, err := ConvertAccountId(e.AccountId)
+	if err != nil {
+		return result, err
 	}
 
-	var inflationDest PublicKey
+	var inflationDest AccountId
 	if e.InflationDest != nil {
-		inflationDest = PublicKey{
-			Ed25519: (*e.InflationDest).Ed25519.String(),
+		inflationDest, err = ConvertAccountId(*e.InflationDest)
+		if err != nil {
+			return result, err
 		}
 	}
 
@@ -74,7 +88,7 @@ func ConvertLiabilities(l xdr.Liabilities) Liabilities {
 func ConvertAccountEntryExtensionV1Ext(e xdr.AccountEntryExtensionV1Ext) AccountEntryExtensionV1Ext {
 	var v2 AccountEntryExtensionV2
 	if e.V2 != nil {
-		v2 = ConvertAccountEntryExtensionV2(*e.V2)
+		v2, _ = ConvertAccountEntryExtensionV2(*e.V2)
 	}
 
 	return AccountEntryExtensionV1Ext{
@@ -83,13 +97,14 @@ func ConvertAccountEntryExtensionV1Ext(e xdr.AccountEntryExtensionV1Ext) Account
 	}
 }
 
-func ConvertAccountEntryExtensionV2(e xdr.AccountEntryExtensionV2) AccountEntryExtensionV2 {
-	var signerSponsoringIDs []PublicKey
+func ConvertAccountEntryExtensionV2(e xdr.AccountEntryExtensionV2) (AccountEntryExtensionV2, error) {
+	var signerSponsoringIDs []AccountId
 	if e.SignerSponsoringIDs != nil {
 		for _, xdrSigner := range e.SignerSponsoringIDs {
 			if xdrSigner != nil {
-				signer := PublicKey{
-					Ed25519: (*xdrSigner.Ed25519).String(),
+				signer, err := ConvertAccountId(*xdrSigner)
+				if err != nil {
+					return AccountEntryExtensionV2{}, err
 				}
 
 				signerSponsoringIDs = append(signerSponsoringIDs, signer)
@@ -105,7 +120,7 @@ func ConvertAccountEntryExtensionV2(e xdr.AccountEntryExtensionV2) AccountEntryE
 		NumSponsoring:       uint32(e.NumSponsoring),
 		SignerSponsoringIDs: signerSponsoringIDs,
 		Ext:                 ext,
-	}
+	}, nil
 }
 
 func ConvertAccountEntryExtensionV2Ext(e xdr.AccountEntryExtensionV2Ext) AccountEntryExtensionV2Ext {
@@ -189,8 +204,9 @@ func ConvertMuxedAccount(ma xdr.MuxedAccount) (MuxedAccount, error) {
 func ConvertRevokeSponsorshipOpSigner(s xdr.RevokeSponsorshipOpSigner) (RevokeSponsorshipOpSigner, error) {
 	var result RevokeSponsorshipOpSigner
 
-	accountId := PublicKey{
-		Ed25519: s.AccountId.Ed25519.String(),
+	accountId, err := ConvertAccountId(s.AccountId)
+	if err != nil {
+		return result, err
 	}
 
 	signerKey, err := ConvertSignerKey(s.SignerKey)
