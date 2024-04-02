@@ -89,23 +89,23 @@ type OperationBody struct {
 	RestoreFootprintOp              *RestoreFootprintOp              `json:"restore_footprint_op,omitempty"`
 }
 
-type PublicKey struct {
-	Ed25519 string `json:"ed25519,omitempty"`
+type AccountId struct {
+	Address string `json:"address,omitempty"`
 }
 
 type Asset struct {
 	AssetType string    `json:"asset_type,omitempty"`
 	AssetCode []byte    `json:"asset_code,omitempty"`
-	Issuer    PublicKey `json:"issuer,omitempty"`
+	Issuer    AccountId `json:"issuer,omitempty"`
 }
 
 type CreateAccountOp struct {
-	Destination     PublicKey `json:"public_key,omitempty"`
+	Destination     AccountId `json:"destination,omitempty"`
 	StartingBalance int64     `json:"starting_balance,omitempty"`
 }
 
 type PaymentOp struct {
-	Destination MuxedAccount `json:"muxed_account,omitempty"`
+	Destination MuxedAccount `json:"destination,omitempty"`
 	Asset       Asset        `json:"asset,omitempty"`
 	Amount      int64        `json:"amount,omitempty"`
 }
@@ -140,7 +140,7 @@ type CreatePassiveSellOfferOp struct {
 }
 
 type SetOptionsOp struct {
-	InflationDest *PublicKey `json:"inflation_dest,omitempty"`
+	InflationDest *AccountId `json:"inflation_dest,omitempty"`
 	ClearFlags    *uint32    `json:"clear_flags,omitempty"`
 	SetFlags      *uint32    `json:"set_flags,omitempty"`
 	MasterWeight  *uint32    `json:"master_weight,omitempty"`
@@ -152,7 +152,7 @@ type SetOptionsOp struct {
 }
 
 type Signer struct {
-	Key    SignerKey `json:"signer_key,omitempty"`
+	Key    SignerKey `json:"key,omitempty"`
 	Weight uint32    `json:"weight,omitempty"`
 }
 
@@ -169,8 +169,8 @@ type SignerKeyEd25519SignedPayload struct {
 }
 
 type ChangeTrustOp struct {
-	Line  ChangeTrustAsset `json:"change_trust_asset,omitempty"`
-	Limit int64            `json:"int64,omitempty"`
+	Line  ChangeTrustAsset `json:"line,omitempty"`
+	Limit int64            `json:"limit,omitempty"`
 }
 
 type ChangeTrustAsset struct {
@@ -189,7 +189,7 @@ type LiquidityPoolConstantProductParameters struct {
 }
 
 type AllowTrustOp struct {
-	Trustor   PublicKey `json:"trustor,omitempty"`
+	Trustor   AccountId `json:"trustor,omitempty"`
 	AssetCode []byte    `json:"asset_code,omitempty"`
 	Authorize uint32    `json:"authorize,omitempty"`
 }
@@ -231,7 +231,7 @@ type Claimant struct {
 }
 
 type ClaimantV0 struct {
-	Destination PublicKey      `json:"destination,omitempty"`
+	Destination AccountId      `json:"destination,omitempty"`
 	Predicate   ClaimPredicate `json:"predicate,omitempty"`
 }
 
@@ -253,7 +253,7 @@ type ClaimableBalanceId struct {
 }
 
 type BeginSponsoringFutureReservesOp struct {
-	SponsoredId PublicKey `json:"sponsored_id,omitempty"`
+	SponsoredId AccountId `json:"sponsored_id,omitempty"`
 }
 
 type RevokeSponsorshipOp struct {
@@ -262,7 +262,7 @@ type RevokeSponsorshipOp struct {
 }
 
 type RevokeSponsorshipOpSigner struct {
-	AccountId PublicKey `json:"account_id,omitempty"`
+	AccountId AccountId `json:"account_id,omitempty"`
 	SignerKey SignerKey `json:"signer_key,omitempty"`
 }
 
@@ -280,11 +280,11 @@ type LedgerKey struct {
 }
 
 type LedgerKeyAccount struct {
-	AccountId PublicKey `json:"account_id,omitempty"`
+	AccountId AccountId `json:"account_id,omitempty"`
 }
 
 type LedgerKeyTrustLine struct {
-	AccountId PublicKey      `json:"account_id,omitempty"`
+	AccountId AccountId      `json:"account_id,omitempty"`
 	Asset     TrustLineAsset `json:"asset,omitempty"`
 }
 
@@ -294,12 +294,12 @@ type TrustLineAsset struct {
 }
 
 type LedgerKeyOffer struct {
-	SellerId PublicKey `json:"seller_id,omitempty"`
+	SellerId AccountId `json:"seller_id,omitempty"`
 	OfferId  int64     `json:"offer_id,omitempty"`
 }
 
 type LedgerKeyData struct {
-	AccountId PublicKey `json:"account_id,omitempty"`
+	AccountId AccountId `json:"account_id,omitempty"`
 	DataName  string    `json:"data_name,omitempty"`
 }
 
@@ -318,7 +318,7 @@ type LedgerKeyContractData struct {
 }
 
 type ScAddress struct {
-	AccountId  *PublicKey `json:"account_id,omitempty"`
+	AccountId  *AccountId `json:"account_id,omitempty"`
 	ContractId *string    `json:"contract_id,omitempty"`
 }
 
@@ -419,7 +419,7 @@ type ClawbackClaimableBalanceOp struct {
 }
 
 type SetTrustLineFlagsOp struct {
-	Trustor    PublicKey `json:"trustor,omitempty"`
+	Trustor    AccountId `json:"trustor,omitempty"`
 	Asset      Asset     `json:"asset,omitempty"`
 	ClearFlags uint32    `json:"clear_flags,omitempty"`
 	SetFlags   uint32    `json:"set_flags,omitempty"`
@@ -743,7 +743,7 @@ type ManageDataResult struct {
 }
 
 type InflationPayout struct {
-	Destination PublicKey `json:"destination,omitempty"`
+	Destination AccountId `json:"destination,omitempty"`
 	Amount      int64     `json:"amount,omitempty"`
 }
 
@@ -780,7 +780,7 @@ type ManageOfferSuccessResult struct {
 }
 
 type OfferEntry struct {
-	SellerId PublicKey     `json:"seller_id,omitempty"`
+	SellerId AccountId     `json:"seller_id,omitempty"`
 	OfferId  int64         `json:"offer_id,omitempty"`
 	Selling  Asset         `json:"selling,omitempty"`
 	Buying   Asset         `json:"buying,omitempty"`
@@ -834,7 +834,7 @@ type ClaimOfferAtomV0 struct {
 }
 
 type ClaimOfferAtom struct {
-	SellerId     PublicKey `json:"seller_id,omitempty"`
+	SellerId     AccountId `json:"seller_id,omitempty"`
 	OfferId      int64     `json:"offer_id,omitempty"`
 	AssetSold    Asset     `json:"asset_sold,omitempty"`
 	AmountSold   int64     `json:"amount_sold,omitempty"`
@@ -851,7 +851,7 @@ type ClaimLiquidityAtom struct {
 }
 
 type SimplePaymentResult struct {
-	Destination PublicKey `json:"destination,omitempty"`
+	Destination AccountId `json:"destination,omitempty"`
 	Asset       Asset     `json:"asset,omitempty"`
 	Amount      int64     `json:"amount,omitempty"`
 }
@@ -918,7 +918,7 @@ type EvictionIterator struct {
 }
 
 type ConfigSettingContractExecutionLanesV0 struct {
-	LedgerMaxTxCount uint32 `json:"ttl,omitempty"`
+	LedgerMaxTxCount uint32 `json:"ledger_max_tx_count,omitempty"`
 }
 
 type StateArchivalSettings struct {
@@ -1036,7 +1036,7 @@ type ClaimableBalanceEntryExtensionV1Ext struct {
 }
 
 type DataEntry struct {
-	AccountId PublicKey    `json:"account_id,omitempty"`
+	AccountId AccountId    `json:"account_id,omitempty"`
 	DataName  string       `json:"data_name,omitempty"`
 	DataValue []byte       `json:"data_value,omitempty"`
 	Ext       DataEntryExt `json:"ext,omitempty"`
@@ -1047,7 +1047,7 @@ type DataEntryExt struct {
 }
 
 type TrustLineEntry struct {
-	AccountId PublicKey         `json:"account_id,omitempty"`
+	AccountId AccountId         `json:"account_id,omitempty"`
 	Asset     TrustLineAsset    `json:"asset,omitempty"`
 	Balance   int64             `json:"balance,omitempty"`
 	Limit     int64             `json:"limit,omitempty"`
@@ -1080,11 +1080,11 @@ type TrustLineEntryExtensionV2Ext struct {
 }
 
 type AccountEntry struct {
-	AccountId     PublicKey       `json:"account_id,omitempty"`
+	AccountId     AccountId       `json:"account_id,omitempty"`
 	Balance       int64           `json:"balance,omitempty"`
 	SeqNum        int64           `json:"seq_num,omitempty"`
 	NumSubEntries uint32          `json:"num_sub_entries,omitempty"`
-	InflationDest *PublicKey      `json:"inflation_dest,omitempty"`
+	InflationDest *AccountId      `json:"inflation_dest,omitempty"`
 	Flags         uint32          `json:"flags,omitempty"`
 	HomeDomain    string          `json:"home_domain,omitempty"`
 	Thresholds    []byte          `json:"thresholds,omitempty"`
@@ -1110,7 +1110,7 @@ type AccountEntryExtensionV1Ext struct {
 type AccountEntryExtensionV2 struct {
 	NumSponsored        uint32                     `json:"num_sponsored,omitempty"`
 	NumSponsoring       uint32                     `json:"num_sponsoring,omitempty"`
-	SignerSponsoringIDs []PublicKey                `json:"signer_sponsoring_ids,omitempty"`
+	SignerSponsoringIDs []AccountId                `json:"signer_sponsoring_ids,omitempty"`
 	Ext                 AccountEntryExtensionV2Ext `json:"ext,omitempty"`
 }
 
@@ -1136,7 +1136,7 @@ type LedgerEntryExt struct {
 }
 
 type LedgerEntryExtensionV1 struct {
-	SponsoringId PublicKey                 `json:"sponsoring_id,omitempty"`
+	SponsoringId AccountId                 `json:"sponsoring_id,omitempty"`
 	Ext          LedgerEntryExtensionV1Ext `json:"ext,omitempty"`
 }
 

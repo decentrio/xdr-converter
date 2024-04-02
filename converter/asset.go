@@ -9,8 +9,9 @@ import (
 
 func ConvertTrustLineEntry(e xdr.TrustLineEntry) (TrustLineEntry, error) {
 	var result TrustLineEntry
-	accountId := PublicKey{
-		Ed25519: e.AccountId.Ed25519.String(),
+	accountId, err := ConvertAccountId(e.AccountId)
+	if err != nil {
+		return result, err
 	}
 
 	asset, err := ConvertTrustLineAsset(e.Asset)
@@ -82,8 +83,9 @@ func ConvertAsset(as xdr.Asset) (Asset, error) {
 		result.AssetType = "alphanum4"
 		result.AssetCode = as.AlphaNum4.AssetCode[:]
 
-		issuer := PublicKey{
-			Ed25519: ConvertEd25519(as.AlphaNum4.Issuer.ToMuxedAccount().Ed25519),
+		issuer, err := ConvertAccountId(as.AlphaNum4.Issuer)
+		if err != nil {
+			return result, err
 		}
 		result.Issuer = issuer
 
@@ -92,8 +94,9 @@ func ConvertAsset(as xdr.Asset) (Asset, error) {
 		result.AssetType = "alphanum12"
 		result.AssetCode = as.AlphaNum12.AssetCode[:]
 
-		issuer := PublicKey{
-			Ed25519: ConvertEd25519(as.AlphaNum12.Issuer.ToMuxedAccount().Ed25519),
+		issuer, err := ConvertAccountId(as.AlphaNum12.Issuer)
+		if err != nil {
+			return result, err
 		}
 		result.Issuer = issuer
 
@@ -264,8 +267,9 @@ func ConvertClaimant(c xdr.Claimant) (Claimant, error) {
 	case xdr.ClaimantTypeClaimantTypeV0:
 		xdrV0 := c.V0
 
-		destination := PublicKey{
-			Ed25519: xdrV0.Destination.Ed25519.String(),
+		destination, err := ConvertAccountId(xdrV0.Destination)
+		if err != nil {
+			return result, err
 		}
 
 		predicate, err := ConvertClaimPredicate(c.V0.Predicate)
@@ -476,8 +480,9 @@ func ConvertClaimOfferAtomV0(c xdr.ClaimOfferAtomV0) (ClaimOfferAtomV0, error) {
 func ConvertClaimOfferAtom(c xdr.ClaimOfferAtom) (ClaimOfferAtom, error) {
 	var result ClaimOfferAtom
 
-	sellerId := PublicKey{
-		Ed25519: c.SellerId.Ed25519.String(),
+	sellerId, err := ConvertAccountId(c.SellerId)
+	if err != nil {
+		return result, err
 	}
 
 	assetSold, err := ConvertAsset(c.AssetSold)
@@ -527,8 +532,10 @@ func ConvertClaimLiquidityAtom(c xdr.ClaimLiquidityAtom) (ClaimLiquidityAtom, er
 
 func ConvertSimplePaymentResult(r xdr.SimplePaymentResult) (SimplePaymentResult, error) {
 	var result SimplePaymentResult
-	destination := PublicKey{
-		Ed25519: ConvertEd25519(r.Destination.Ed25519),
+
+	destination, err := ConvertAccountId(r.Destination)
+	if err != nil {
+		return result, err
 	}
 
 	asset, err := ConvertAsset(r.Asset)
@@ -587,8 +594,9 @@ func ConvertManageOfferSuccessResultOffer(r xdr.ManageOfferSuccessResultOffer) (
 func ConvertOfferEntry(e xdr.OfferEntry) (OfferEntry, error) {
 	var result OfferEntry
 
-	sellerId := PublicKey{
-		Ed25519: e.SellerId.Ed25519.String(),
+	sellerId, err := ConvertAccountId(e.SellerId)
+	if err != nil {
+		return result, err
 	}
 
 	selling, err := ConvertAsset(e.Selling)
@@ -620,8 +628,9 @@ func ConvertOfferEntryExt(e xdr.OfferEntryExt) OfferEntryExt {
 }
 
 func ConvertInflationPayout(i xdr.InflationPayout) InflationPayout {
+	destination, _ := ConvertAccountId(i.Destination)
 	return InflationPayout{
-		Destination: PublicKey{Ed25519: i.Destination.Ed25519.String()},
+		Destination: destination,
 		Amount:      int64(i.Amount),
 	}
 }
