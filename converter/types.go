@@ -52,13 +52,7 @@ type Operation struct {
 }
 
 type MuxedAccount struct {
-	Ed25519  *string               `json:"ed25519,omitempty"`
-	Med25519 *MuxedAccountMed25519 `json:"med25519,omitempty"`
-}
-
-type MuxedAccountMed25519 struct {
-	Id      uint64  `json:"id,omitempty"`
-	Ed25519 *string `json:"ed25519,omitempty"`
+	Address string `json:"address,omitempty"`
 }
 
 type OperationBody struct {
@@ -157,15 +151,7 @@ type Signer struct {
 }
 
 type SignerKey struct {
-	Ed25519              *string                        `json:"ed25519,omitempty"`
-	PreAuthTx            *string                        `json:"pre_auth_tx,omitempty"`
-	HashX                *string                        `json:"hash_x,omitempty"`
-	Ed25519SignedPayload *SignerKeyEd25519SignedPayload `json:"ed25519_signed_payload,omitempty"`
-}
-
-type SignerKeyEd25519SignedPayload struct {
-	Ed25519 string `json:"ed25519,omitempty"`
-	Payload []byte `json:"payload,omitempty"`
+	Address string `json:"address,omitempty"`
 }
 
 type ChangeTrustOp struct {

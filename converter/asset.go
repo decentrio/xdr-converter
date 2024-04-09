@@ -455,7 +455,10 @@ func ConvertClaimAtom(c xdr.ClaimAtom) (ClaimAtom, error) {
 func ConvertClaimOfferAtomV0(c xdr.ClaimOfferAtomV0) (ClaimOfferAtomV0, error) {
 	var result ClaimOfferAtomV0
 
-	sellerEd25519 := c.SellerEd25519.String()
+	sellerEd25519, err := ConvertEd25519(c.SellerEd25519)
+	if err != nil {
+		return result, err
+	}
 
 	assetSold, err := ConvertAsset(c.AssetSold)
 	if err != nil {

@@ -421,9 +421,14 @@ func ConvertTransaction(tx xdr.Transaction) (Transaction, error) {
 func ConvertTransactionV0(tx xdr.TransactionV0) (TransactionV0, error) {
 	var txV0 TransactionV0
 
-	txV0.SourceAccountEd25519 = tx.SourceAccountEd25519.String()
 	txV0.Fee = uint32(tx.Fee)
 	txV0.SeqNum = int64(tx.SeqNum)
+
+	sourceAccount, err := ConvertEd25519(tx.SourceAccountEd25519)
+	if err != nil {
+		return txV0, err
+	}
+	txV0.SourceAccountEd25519 = sourceAccount
 
 	tb, err := ConvertTimeBounds(tx.TimeBounds)
 	if err != nil {
