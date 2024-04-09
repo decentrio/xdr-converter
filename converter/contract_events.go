@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 
 	"github.com/pkg/errors"
+	"github.com/stellar/go/strkey"
 	"github.com/stellar/go/xdr"
 )
 
@@ -68,7 +69,13 @@ func ConvertContractEvent(e xdr.ContractEvent) (ContractEvent, error) {
 	var result ContractEvent
 
 	result.Ext = ConvertExtensionPoint(e.Ext)
-	contractId := e.ContractId.HexString()
+
+	// contractId := e.ContractId.HexString()
+	contractId, err := strkey.Encode(strkey.VersionByteContract, e.ContractId[:])
+	if err != nil {
+		return result, err
+	}
+
 	result.ContractId = &contractId
 	result.ContractEventType = int32(e.Type)
 

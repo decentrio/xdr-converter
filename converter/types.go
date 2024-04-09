@@ -304,8 +304,8 @@ type LedgerKeyContractData struct {
 }
 
 type ScAddress struct {
-	AccountId  *AccountId `json:"account_id,omitempty"`
-	ContractId *string    `json:"contract_id,omitempty"`
+	AccountId  *string `json:"account_id,omitempty"`
+	ContractId *string `json:"contract_id,omitempty"`
 }
 
 type ScVal struct {
