@@ -7,15 +7,19 @@ import (
 
 func ConvertScAddress(a xdr.ScAddress) (ScAddress, error) {
 	var result ScAddress
+
+	address, err := a.String()
+	if err != nil {
+		return result, err
+	}
+
 	switch a.Type {
 	case xdr.ScAddressTypeScAddressTypeAccount:
-		account, _ := ConvertAccountId(*a.AccountId)
-		result.AccountId = &account
+		result.AccountId = &address
 
 		return result, nil
 	case xdr.ScAddressTypeScAddressTypeContract:
-		contract := a.ContractId.HexString()
-		result.ContractId = &contract
+		result.ContractId = &address
 
 		return result, nil
 	}
