@@ -832,6 +832,9 @@ func ConvertOperationBody(bd xdr.OperationBody) (OperationBody, error) {
 		xdrSetTrustLineFlagsOp := bd.SetTrustLineFlagsOp
 
 		trustor, err := ConvertAccountId(xdrSetTrustLineFlagsOp.Trustor)
+		if err != nil {
+			return result, err
+		}
 
 		asset, err := ConvertAsset(xdrSetTrustLineFlagsOp.Asset)
 		if err != nil {
