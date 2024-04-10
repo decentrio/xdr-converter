@@ -90,6 +90,27 @@ func MarshalJSONContractEventXdr(inp []byte) ([]byte, error) {
 	return bz, nil
 }
 
+func MarshalJSONContractEventBodyXdr(inp []byte) ([]byte, error) {
+	var xdrContractEventBody xdr.ContractEventBody
+
+	err := xdrContractEventBody.UnmarshalBinary(inp)
+	if err != nil {
+		return nil, err
+	}
+
+	eventBody, err := ConvertContractEventBody(xdrContractEventBody)
+	if err != nil {
+		return nil, err
+	}
+
+	bz, err := json.Marshal(eventBody)
+	if err != nil {
+		return nil, err
+	}
+
+	return bz, nil
+}
+
 func MarshalJSONContractKeyXdr(inp []byte) ([]byte, error) {
 	var xdrContractKey xdr.ScVal
 

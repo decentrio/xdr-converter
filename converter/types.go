@@ -1184,6 +1184,16 @@ type ContractEvent struct {
 	Burn              *BurnEvent     `json:"burn,omitempty"`
 }
 
+type ContractEventBody struct {
+	V  int32            `json:"ext,omitempty"`
+	V0 *ContractEventV0 `json:"v0,omitempty"`
+}
+
+type ContractEventV0 struct {
+	Topics []ScVal
+	Data   ScVal
+}
+
 type TransferEvent struct {
 	From   string      `json:"from,omitempty"`
 	To     string      `json:"to,omitempty"`
