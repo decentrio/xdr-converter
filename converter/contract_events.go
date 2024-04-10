@@ -111,6 +111,47 @@ func ConvertContractEvent(e xdr.ContractEvent) (ContractEvent, error) {
 	return result, nil
 }
 
+func ConvertContractEventBody(b xdr.ContractEventBody) (ContractEventBody, error) {
+	var result ContractEventBody
+
+	result.V = b.V
+
+	var v0 ContractEventV0
+	var err error
+	if b.V0 != nil {
+		v0, err = ConvertContractEventV0(*b.V0)
+		if err != nil {
+			return result, err
+		}
+
+	}
+	result.V0 = &v0
+
+	return result, nil
+}
+
+func ConvertContractEventV0(e xdr.ContractEventV0) (ContractEventV0, error) {
+	var topics []ScVal
+	for _, xdrTopic := range e.Topics {
+		topic, err := ConvertScVal(xdrTopic)
+		if err != nil {
+			return ContractEventV0{}, err
+		}
+
+		topics = append(topics, topic)
+	}
+
+	data, err := ConvertScVal(e.Data)
+	if err != nil {
+		return ContractEventV0{}, err
+	}
+
+	return ContractEventV0{
+		Topics: topics,
+		Data:   data,
+	}, nil
+}
+
 func ConvertDiagnosticEvent(e xdr.DiagnosticEvent) (DiagnosticEvent, error) {
 	var result DiagnosticEvent
 
