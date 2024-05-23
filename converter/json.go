@@ -152,3 +152,32 @@ func MarshalJSONContractValueXdr(inp []byte) ([]byte, error) {
 
 	return bz, nil
 }
+
+func MarshalJSONInvokeContractArgsXdr(inp []byte) ([]byte, error) {
+	var xdrInvokeContractArgs xdr.InvokeContractArgs
+
+	err := xdrInvokeContractArgs.UnmarshalBinary(inp)
+	if err != nil {
+		return nil, err
+	}
+
+	var values []ScVal
+	for _, xdrArgs := range xdrInvokeContractArgs.Args {
+		val, err := ConvertScVal(xdrArgs)
+		if err != nil {
+			return nil, err
+		}
+
+		values = append(values, val)
+	}
+
+	var args InvokeContractArgsArg
+	args.Args = values
+
+	bz, err := json.Marshal(args)
+	if err != nil {
+		return nil, err
+	}
+
+	return bz, nil
+}
