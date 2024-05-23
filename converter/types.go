@@ -469,6 +469,10 @@ type InvokeContractArgs struct {
 	Args            []ScVal   `json:"args,omitempty"`
 }
 
+type InvokeContractArgsArg struct {
+	Args []ScVal `json:"args,omitempty"`
+}
+
 type CreateContractArgs struct {
 	ContractIdPreimage ContractIdPreimage `json:"contract_id_preimage,omitempty"`
 	Executable         ContractExecutable `json:"executable,omitempty"`
