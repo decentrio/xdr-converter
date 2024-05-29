@@ -269,9 +269,47 @@ func ConvertContractIdPreimageFromAddress(p xdr.ContractIdPreimageFromAddress) (
 
 func ConvertContractCodeEntry(e xdr.ContractCodeEntry) ContractCodeEntry {
 	return ContractCodeEntry{
-		Ext:  ConvertExtensionPoint(e.Ext),
+		Ext:  ConvertContractCodeEntryExt(e.Ext),
 		Hash: e.Hash.HexString(),
 		Code: e.Code,
+	}
+}
+
+func ConvertContractCodeEntryExt(e xdr.ContractCodeEntryExt) ContractCodeEntryExt {
+	var result ContractCodeEntryExt
+	switch e.V {
+	case 0:
+		result.V = 0
+	case 1:
+		result.V = 1
+		v1Xdr := e.MustV1()
+		v1 := ConvertContractCodeEntryV1(v1Xdr)
+		result.V1 = &v1
+	}
+
+	return result
+}
+
+func ConvertContractCodeEntryV1(e xdr.ContractCodeEntryV1) ContractCodeEntryV1 {
+	return ContractCodeEntryV1{
+		Ext:        ConvertExtensionPoint(e.Ext),
+		CostInputs: ConvertContractCodeCostInputs(e.CostInputs),
+	}
+}
+
+func ConvertContractCodeCostInputs(i xdr.ContractCodeCostInputs) ContractCodeCostInputs {
+	return ContractCodeCostInputs{
+		Ext:               ConvertExtensionPoint(i.Ext),
+		NInstructions:     uint32(i.NInstructions),
+		NFunctions:        uint32(i.NFunctions),
+		NGlobals:          uint32(i.NGlobals),
+		NTableEntries:     uint32(i.NTableEntries),
+		NTypes:            uint32(i.NTypes),
+		NDataSegments:     uint32(i.NDataSegments),
+		NElemSegments:     uint32(i.NElemSegments),
+		NImports:          uint32(i.NImports),
+		NExports:          uint32(i.NExports),
+		NDataSegmentBytes: uint32(i.NDataSegmentBytes),
 	}
 }
 

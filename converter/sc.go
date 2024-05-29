@@ -250,3 +250,4 @@ func ConvertScNonceKey(k xdr.ScNonceKey) ScNonceKey {
 func ConvertExtensionPoint(p xdr.ExtensionPoint) ExtensionPoint {
 	return ExtensionPoint{V: p.V}
 }
+

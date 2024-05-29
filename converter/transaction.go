@@ -204,7 +204,7 @@ func ConvertTransactionMetaV3(m xdr.TransactionMetaV3) (TransactionMetaV3, error
 
 func ConvertSorobanTransactionMeta(m xdr.SorobanTransactionMeta) (SorobanTransactionMeta, error) {
 	var result SorobanTransactionMeta
-	ext := ConvertExtensionPoint(m.Ext)
+	ext := ConvertSorobanTransactionMetaExt(m.Ext)
 
 	var events []ContractEvent
 	for _, xdrEvent := range m.Events {
@@ -235,6 +235,30 @@ func ConvertSorobanTransactionMeta(m xdr.SorobanTransactionMeta) (SorobanTransac
 	result.DiagnosticEvents = diagnosticEvents
 
 	return result, nil
+}
+
+func ConvertSorobanTransactionMetaExt(m xdr.SorobanTransactionMetaExt) SorobanTransactionMetaExt {
+	var result SorobanTransactionMetaExt
+
+	switch m.V {
+	case 0:
+		result.V = 0
+	case 1:
+		result.V = 1
+		v1 := ConvertSorobanTransactionMetaExtV1(m.MustV1())
+		result.V1 = &v1
+	}
+
+	return result
+}
+
+func ConvertSorobanTransactionMetaExtV1(e xdr.SorobanTransactionMetaExtV1) SorobanTransactionMetaExtV1 {
+	return SorobanTransactionMetaExtV1{
+		Ext:                                  ConvertExtensionPoint(e.Ext),
+		TotalNonRefundableResourceFeeCharged: int64(e.TotalNonRefundableResourceFeeCharged),
+		TotalRefundableResourceFeeCharged:    int64(e.TotalRefundableResourceFeeCharged),
+		RentFeeCharged:                       int64(e.RentFeeCharged),
+	}
 }
 
 func ConvertTransactionResultPair(r xdr.TransactionResultPair) (TransactionResultPair, error) {
