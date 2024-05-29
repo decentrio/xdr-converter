@@ -973,9 +973,9 @@ type ConfigSettingContractComputeV0 struct {
 }
 
 type ContractCodeEntry struct {
-	Ext  ExtensionPoint `json:"ext,omitempty"`
-	Hash string         `json:"hash,omitempty"`
-	Code []byte         `json:"code,omitempty"`
+	Ext  ContractCodeEntryExt `json:"ext,omitempty"`
+	Hash string               `json:"hash,omitempty"`
+	Code []byte               `json:"code,omitempty"`
 }
 
 type ContractDataEntry struct {
@@ -1166,10 +1166,10 @@ type TransactionMetaV3 struct {
 }
 
 type SorobanTransactionMeta struct {
-	Ext              ExtensionPoint    `json:"ext,omitempty"`
-	Events           []ContractEvent   `json:"events,omitempty"`
-	ReturnValue      ScVal             `json:"return_value,omitempty"`
-	DiagnosticEvents []DiagnosticEvent `json:"diagnostic_events,omitempty"`
+	Ext              SorobanTransactionMetaExt `json:"ext,omitempty"`
+	Events           []ContractEvent           `json:"events,omitempty"`
+	ReturnValue      ScVal                     `json:"return_value,omitempty"`
+	DiagnosticEvents []DiagnosticEvent         `json:"diagnostic_events,omitempty"`
 }
 
 type DiagnosticEvent struct {
@@ -1225,4 +1225,40 @@ type TransactionResultMeta struct {
 	Result            TransactionResultPair `json:"result,omitempty"`
 	FeeProcessing     LedgerEntryChanges    `json:"fee_processing,omitempty"`
 	TxApplyProcessing TransactionMeta       `json:"tx_apply_processing,omitempty"`
+}
+
+type ContractCodeEntryExt struct {
+	V  int32                `json:"v,omitempty"`
+	V1 *ContractCodeEntryV1 `json:"v1,omitempty"`
+}
+
+type ContractCodeEntryV1 struct {
+	Ext        ExtensionPoint         `json:"ext,omitempty"`
+	CostInputs ContractCodeCostInputs `json:"cost_inputs,omitempty"`
+}
+
+type ContractCodeCostInputs struct {
+	Ext               ExtensionPoint `json:"ext,omitempty"`
+	NInstructions     uint32         `json:"n_instructions,omitempty"`
+	NFunctions        uint32         `json:"n_functions,omitempty"`
+	NGlobals          uint32         `json:"n_globals,omitempty"`
+	NTableEntries     uint32         `json:"n_table_entries,omitempty"`
+	NTypes            uint32         `json:"n_types,omitempty"`
+	NDataSegments     uint32         `json:"n_data_segments,omitempty"`
+	NElemSegments     uint32         `json:"n_elem_segments,omitempty"`
+	NImports          uint32         `json:"n_imports,omitempty"`
+	NExports          uint32         `json:"n_exports,omitempty"`
+	NDataSegmentBytes uint32         `json:"n_data_segment_bytes,omitempty"`
+}
+
+type SorobanTransactionMetaExt struct {
+	V  int32                        `json:"v,omitempty"`
+	V1 *SorobanTransactionMetaExtV1 `json:"v1,omitempty"`
+}
+
+type SorobanTransactionMetaExtV1 struct {
+	Ext                                  ExtensionPoint `json:"ext,omitempty"`
+	TotalNonRefundableResourceFeeCharged int64          `json:"total_non_refundable_resource_fee_charged,omitempty"`
+	TotalRefundableResourceFeeCharged    int64          `json:"total_refundable_resource_fee_charged,omitempty"`
+	RentFeeCharged                       int64          `json:"rent_fee_charged,omitempty"`
 }
