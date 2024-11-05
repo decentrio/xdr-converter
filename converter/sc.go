@@ -196,6 +196,154 @@ func ConvertScVal(v xdr.ScVal) (ScVal, error) {
 	return result, errors.Errorf("error invalid ScVal type %v", v.Type)
 }
 
+func ConvertScValInfo(v xdr.ScVal) (ScValInfo, error) {
+	var result ScValInfo
+	result.Type = scValMap[int32(v.Type)]
+	switch v.Type {
+	case xdr.ScValTypeScvBool:
+		b := *v.B
+		result.Value = &b
+		return result, nil
+	case xdr.ScValTypeScvVoid:
+		// void
+		return result, nil
+	case xdr.ScValTypeScvError:
+		scErr, err := ConvertScError(*v.Error)
+		if err != nil {
+			return result, err
+		}
+		result.Value = &scErr
+
+		return result, nil
+	case xdr.ScValTypeScvU32:
+		u32 := uint32(*v.U32)
+		result.Value = &u32
+		return result, nil
+	case xdr.ScValTypeScvI32:
+		i32 := int32(*v.I32)
+		result.Value = &i32
+		return result, nil
+	case xdr.ScValTypeScvU64:
+		u64 := uint64(*v.U64)
+		result.Value = &u64
+		return result, nil
+	case xdr.ScValTypeScvI64:
+		i64 := int64(*v.I64)
+		result.Value = &i64
+		return result, nil
+	case xdr.ScValTypeScvTimepoint:
+		tp := uint64(*v.Timepoint)
+		result.Value = &tp
+		return result, nil
+	case xdr.ScValTypeScvDuration:
+		duration := uint64(*v.Duration)
+		result.Value = &duration
+		return result, nil
+	case xdr.ScValTypeScvU128:
+		xdrU128 := *v.U128
+		u128 := UInt128Parts{
+			Hi: uint64(xdrU128.Hi),
+			Lo: uint64(xdrU128.Lo),
+		}
+		result.Value = &u128
+		return result, nil
+	case xdr.ScValTypeScvI128:
+		xdrI128 := *v.I128
+		i128 := Int128Parts{
+			Hi: int64(xdrI128.Hi),
+			Lo: uint64(xdrI128.Lo),
+		}
+		result.Value = &i128
+		return result, nil
+	case xdr.ScValTypeScvU256:
+		xdrU256 := *v.U256
+		u256 := UInt256Parts{
+			HiHi: uint64(xdrU256.HiHi),
+			HiLo: uint64(xdrU256.HiLo),
+			LoHi: uint64(xdrU256.LoHi),
+			LoLo: uint64(xdrU256.LoLo),
+		}
+		result.Value = &u256
+		return result, nil
+	case xdr.ScValTypeScvI256:
+		xdrI256 := *v.I256
+		i256 := Int256Parts{
+			HiHi: int64(xdrI256.HiHi),
+			HiLo: uint64(xdrI256.HiLo),
+			LoHi: uint64(xdrI256.LoHi),
+			LoLo: uint64(xdrI256.LoLo),
+		}
+		result.Value = &i256
+		return result, nil
+	case xdr.ScValTypeScvBytes:
+		xdrBytes := []byte(*v.Bytes)
+		bytes := ScBytes(xdrBytes)
+		result.Value = &bytes
+		return result, nil
+	case xdr.ScValTypeScvString:
+		str := string(*v.Str)
+		result.Value = &str
+		return result, nil
+	case xdr.ScValTypeScvSymbol:
+		strSym := string(*v.Sym)
+		sym := ScSymbol(strSym)
+		result.Value = &sym
+		return result, nil
+	case xdr.ScValTypeScvVec:
+		xdrScVec := *v.Vec
+		var ScVec []ScValInfo
+		for _, xdrScVal := range *xdrScVec {
+			scVal, err := ConvertScValInfo(xdrScVal)
+			if err != nil {
+				return result, err
+			}
+			ScVec = append(ScVec, scVal)
+		}
+		result.Value = &ScVec
+		return result, nil
+	case xdr.ScValTypeScvMap:
+		xdrScMap := *v.Map
+		var scMapEntrys []ScMapEntryInfo
+		for _, xdrScMapEntry := range *xdrScMap {
+			scMapEntry, err := ConvertScMapEntryInfo(xdrScMapEntry)
+			if err != nil {
+				return result, err
+			}
+
+			scMapEntrys = append(scMapEntrys, scMapEntry)
+		}
+		result.Value = &scMapEntrys
+		return result, nil
+	case xdr.ScValTypeScvAddress:
+		xdrScAddress := *v.Address
+		scAddress, err := ConvertScAddress(xdrScAddress)
+		if err != nil {
+			return result, err
+		}
+		result.Value = &scAddress
+		return result, nil
+	case xdr.ScValTypeScvContractInstance:
+		xdrInstance := *v.Instance
+		instance, err := ConvertScContractInstance(xdrInstance)
+		if err != nil {
+			return result, err
+		}
+		result.Value = &instance
+		return result, nil
+	case xdr.ScValTypeScvLedgerKeyContractInstance:
+		// void
+		return result, nil
+	case xdr.ScValTypeScvLedgerKeyNonce:
+		xdrNonce := *v.NonceKey
+		scNonce := ConvertScNonceKey(xdrNonce)
+		result.Value = &scNonce
+		return result, nil
+	}
+
+	return result, errors.Errorf("error invalid ScVal type %v", v.Type)
+}
+
+
 func ConvertScMapEntry(m xdr.ScMapEntry) (ScMapEntry, error) {
 	var result ScMapEntry
 
@@ -205,6 +353,25 @@ func ConvertScMapEntry(m xdr.ScMapEntry) (ScMapEntry, error) {
 	}
 
 	val, err := ConvertScVal(m.Val)
+	if err != nil {
+		return result, err
+	}
+
+	result.Key = key
+	result.Val = val
+
+	return result, nil
+}
+
+func ConvertScMapEntryInfo(m xdr.ScMapEntry) (ScMapEntryInfo, error) {
+	var result ScMapEntryInfo
+
+	key, err := ConvertScValInfo(m.Key)
+	if err != nil {
+		return result, err
+	}
+
+	val, err := ConvertScValInfo(m.Val)
 	if err != nil {
 		return result, err
 	}

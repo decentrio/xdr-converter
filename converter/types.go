@@ -331,6 +331,36 @@ type ScVal struct {
 	Instance  *ScContractInstance `json:"instance,omitempty"`
 }
 
+type ScValInfo struct {
+	Type  string      `json:"type,omitempty"`
+	Value interface{} `json:"value,omitempty"`
+}
+
+var scValMap = map[int32]string{
+	0:  "Bool",
+	1:  "Void",
+	2:  "Error",
+	3:  "U32",
+	4:  "I32",
+	5:  "U64",
+	6:  "I64",
+	7:  "Timepoint",
+	8:  "Duration",
+	9:  "U128",
+	10: "I128",
+	11: "U256",
+	12: "I256",
+	13: "Bytes",
+	14: "String",
+	15: "Symbol",
+	16: "Vec",
+	17: "Map",
+	18: "Address",
+	19: "ContractInstance",
+	20: "LedgerKeyContractInstance",
+	21: "LedgerKeyNonce",
+}
+
 type ContractExecutable struct {
 	WasmHash *string `json:"wasm_hash,omitempty"`
 }
@@ -349,6 +379,11 @@ type ScMap []ScMapEntry
 type ScMapEntry struct {
 	Key ScVal `json:"key,omitempty"`
 	Val ScVal `json:"val,omitempty"`
+}
+
+type ScMapEntryInfo struct {
+	Key ScValInfo `json:"key,omitempty"`
+	Val ScValInfo `json:"val,omitempty"`
 }
 
 type UInt128Parts struct {
