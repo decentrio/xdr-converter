@@ -446,7 +446,7 @@ const (
 	XDR_ADDRESS    = "address"
 )
 
-func convertToData(keyType string, keyValue string) (xdr.ScVal, error) {
+func ConvertToData(keyType string, keyValue string) (xdr.ScVal, error) {
 	switch keyType {
 	case XDR_BOOL:
 		return convertToDataBool(keyValue)
@@ -707,7 +707,7 @@ func convertToDataScVec(value string) (xdr.ScVal, error) {
 			return xdr.ScVal{}, fmt.Errorf("not enough len")
 		}
 
-		item, err := convertToData(keySplit[0], keySplit[1])
+		item, err := ConvertToData(keySplit[0], keySplit[1])
 		if err != nil {
 			return xdr.ScVal{}, err
 		}
