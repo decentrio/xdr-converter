@@ -181,7 +181,7 @@ func ConvertMuxedAccount(ma xdr.MuxedAccount) (MuxedAccount, error) {
 	return result, nil
 }
 
-// TODO :testing
+// TODO: testing
 func ConvertRevokeSponsorshipOpSigner(s xdr.RevokeSponsorshipOpSigner) (RevokeSponsorshipOpSigner, error) {
 	var result RevokeSponsorshipOpSigner
 
