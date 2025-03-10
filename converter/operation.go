@@ -2,7 +2,7 @@ package converter
 
 import (
 	"github.com/pkg/errors"
-	"github.com/stellar/go/xdr"
+	"github.com/stellar/go-stellar-sdk/xdr"
 )
 
 func ConvertOperationMeta(m xdr.OperationMeta) (OperationMeta, error) {
@@ -940,8 +940,8 @@ func ConvertStateArchivalSettings(s xdr.StateArchivalSettings) StateArchivalSett
 		PersistentRentRateDenominator:  int64(s.PersistentRentRateDenominator),
 		TempRentRateDenominator:        int64(s.TempRentRateDenominator),
 		MaxEntriesToArchive:            uint32(s.MaxEntriesToArchive),
-		BucketListSizeWindowSampleSize: uint32(s.BucketListSizeWindowSampleSize),
-		BucketListWindowSamplePeriod:   uint32(s.BucketListWindowSamplePeriod),
+		BucketListSizeWindowSampleSize: uint32(s.LiveSorobanStateSizeWindowSampleSize),
+		BucketListWindowSamplePeriod:   uint32(s.LiveSorobanStateSizeWindowSamplePeriod),
 		EvictionScanSize:               uint32(s.EvictionScanSize),
 		StartingEvictionScanLevel:      uint32(s.StartingEvictionScanLevel),
 	}

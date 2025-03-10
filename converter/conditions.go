@@ -2,7 +2,7 @@ package converter
 
 import (
 	"github.com/pkg/errors"
-	"github.com/stellar/go/xdr"
+	"github.com/stellar/go-stellar-sdk/xdr"
 )
 
 func ConvertPreconditions(c xdr.Preconditions) (Preconditions, error) {

@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
-	"github.com/stellar/go/xdr"
+	"github.com/stellar/go-stellar-sdk/xdr"
 )
 
 func ConvertSorobanAuthorizationEntry(e xdr.SorobanAuthorizationEntry) (SorobanAuthorizationEntry, error) {
@@ -124,7 +124,7 @@ func ConvertSorobanTransactionData(d xdr.SorobanTransactionData) (SorobanTransac
 		return result, err
 	}
 
-	result.Ext = ConvertExtensionPoint(d.Ext)
+	result.Ext = ExtensionPoint{V: 0} // SorobanTransactionDataExt has different structure in go-stellar-sdk
 	result.Resources = resources
 	result.ResourceFee = int64(d.ResourceFee)
 
@@ -141,7 +141,7 @@ func ConvertSorobanResources(r xdr.SorobanResources) (SorobanResources, error) {
 
 	result.Footprint = footPrint
 	result.Instructions = uint32(r.Instructions)
-	result.ReadBytes = uint32(r.ReadBytes)
+	result.ReadBytes = uint32(r.DiskReadBytes)
 	result.WriteBytes = uint32(r.WriteBytes)
 
 	return result, nil
@@ -359,21 +359,21 @@ func ConvertConfigSettingContractComputeV0(c xdr.ConfigSettingContractComputeV0)
 
 func ConvertConfigSettingContractLedgerCostV0(c xdr.ConfigSettingContractLedgerCostV0) ConfigSettingContractLedgerCostV0 {
 	return ConfigSettingContractLedgerCostV0{
-		LedgerMaxReadLedgerEntries:     uint32(c.LedgerMaxReadLedgerEntries),
-		LedgerMaxReadBytes:             uint32(c.LedgerMaxReadBytes),
+		LedgerMaxReadLedgerEntries:     uint32(c.LedgerMaxDiskReadEntries),
+		LedgerMaxReadBytes:             uint32(c.LedgerMaxDiskReadBytes),
 		LedgerMaxWriteLedgerEntries:    uint32(c.LedgerMaxWriteLedgerEntries),
 		LedgerMaxWriteBytes:            uint32(c.LedgerMaxWriteBytes),
-		TxMaxReadLedgerEntries:         uint32(c.TxMaxReadLedgerEntries),
-		TxMaxReadBytes:                 uint32(c.TxMaxReadBytes),
+		TxMaxReadLedgerEntries:         uint32(c.TxMaxDiskReadEntries),
+		TxMaxReadBytes:                 uint32(c.TxMaxDiskReadBytes),
 		TxMaxWriteLedgerEntries:        uint32(c.TxMaxWriteLedgerEntries),
 		TxMaxWriteBytes:                uint32(c.TxMaxWriteBytes),
-		FeeReadLedgerEntry:             int64(c.FeeReadLedgerEntry),
+		FeeReadLedgerEntry:             int64(c.FeeDiskReadLedgerEntry),
 		FeeWriteLedgerEntry:            int64(c.FeeWriteLedgerEntry),
-		FeeRead1Kb:                     int64(c.FeeRead1Kb),
-		BucketListTargetSizeBytes:      int64(c.BucketListTargetSizeBytes),
-		WriteFee1KbBucketListLow:       int64(c.WriteFee1KbBucketListLow),
-		WriteFee1KbBucketListHigh:      int64(c.WriteFee1KbBucketListHigh),
-		BucketListWriteFeeGrowthFactor: uint32(c.BucketListWriteFeeGrowthFactor),
+		FeeRead1Kb:                     int64(c.FeeDiskRead1Kb),
+		BucketListTargetSizeBytes:      int64(c.SorobanStateTargetSizeBytes),
+		WriteFee1KbBucketListLow:       int64(c.RentFee1KbSorobanStateSizeLow),
+		WriteFee1KbBucketListHigh:      int64(c.RentFee1KbSorobanStateSizeHigh),
+		BucketListWriteFeeGrowthFactor: uint32(c.SorobanStateRentFeeGrowthFactor),
 	}
 }
 

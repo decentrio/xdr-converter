@@ -2,7 +2,7 @@ package converter
 
 import (
 	"github.com/pkg/errors"
-	"github.com/stellar/go/xdr"
+	"github.com/stellar/go-stellar-sdk/xdr"
 )
 
 // func ConvertTransactionJSON(tx models.Transaction) models.TransactionJSON {
@@ -665,9 +665,9 @@ func ConvertConfigSettingEntry(e xdr.ConfigSettingEntry) (ConfigSettingEntry, er
 		value := ConvertConfigSettingContractExecutionLanesV0(*e.ContractExecutionLanes)
 		result.ContractExecutionLanes = &value
 		return result, nil
-	case xdr.ConfigSettingIdConfigSettingBucketlistSizeWindow:
+	case xdr.ConfigSettingIdConfigSettingLiveSorobanStateSizeWindow:
 		var value []uint64
-		for _, s := range *e.BucketListSizeWindow {
+		for _, s := range *e.LiveSorobanStateSizeWindow {
 			value = append(value, uint64(s))
 		}
 

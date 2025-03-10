@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"github.com/pkg/errors"
-	"github.com/stellar/go/xdr"
+	"github.com/stellar/go-stellar-sdk/xdr"
 )
 
 func ConvertTrustLineEntry(e xdr.TrustLineEntry) (TrustLineEntry, error) {

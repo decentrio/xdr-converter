@@ -2,7 +2,7 @@ package converter
 
 import (
 	"github.com/pkg/errors"
-	"github.com/stellar/go/xdr"
+	"github.com/stellar/go-stellar-sdk/xdr"
 )
 
 func ConvertScAddress(a xdr.ScAddress) (ScAddress, error) {
