@@ -1,13 +1,32 @@
+// Package converter provides JSON-friendly type definitions for Stellar XDR data structures.
+// These types mirror the XDR types from github.com/stellar/go-stellar-sdk/xdr but with
+// proper JSON serialization tags (snake_case, omitempty) for API responses.
+//
+// The converter functions in this package transform XDR types to these JSON-friendly types.
 package converter
 
 import (
 	"time"
 )
 
+// ============================================================================
+// Basic Types
+// ============================================================================
+
+// Hash represents a 32-byte hash value
 type Hash []byte
+
+// PoolId represents a liquidity pool identifier
 type PoolId Hash
+
+// ScSymbol represents a Soroban contract symbol
 type ScSymbol string
 
+// ============================================================================
+// Transaction Types
+// ============================================================================
+
+// TransactionEnvelope wraps different transaction envelope versions
 type TransactionEnvelope struct {
 	V0      *TransactionV0Envelope      `json:"v0,omitempty"`
 	V1      *TransactionV1Envelope      `json:"v1,omitempty"`
@@ -925,7 +944,7 @@ type ConfigSettingEntry struct {
 	ContractLedgerCost         *ConfigSettingContractLedgerCostV0     `json:"contract_ledger_cost,omitempty"`
 	ContractHistoricalData     *ConfigSettingContractHistoricalDataV0 `json:"contract_historical_data,omitempty"`
 	ContractEvents             *ConfigSettingContractEventsV0         `json:"contract_events,omitempty"`
-	ContractBandwidth          *ConfigSettingContractBandwidthV0      `json:"contract_bandwith,omitempty"`
+	ContractBandwidth          *ConfigSettingContractBandwidthV0      `json:"contract_bandwidth,omitempty"`
 	ContractCostParamsCpuInsns *ContractCostParams                    `json:"contract_cost_params_cpu_insns,omitempty"`
 	ContractCostParamsMemBytes *ContractCostParams                    `json:"contract_cost_params_mem_bytes,omitempty"`
 	ContractDataKeySizeBytes   *uint32                                `json:"contract_data_key_size_bytes,omitempty"`
